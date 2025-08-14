@@ -4,6 +4,7 @@ import org.testng.annotations.AfterMethod;
 import org.testng.annotations.BeforeMethod;
 
 import java.io.FileInputStream;
+import java.io.InputStream;
 import java.util.Properties;
 
 public class BaseTest {
@@ -13,8 +14,10 @@ public class BaseTest {
     @BeforeMethod
     public void setUp() throws Exception {
         // load config
-        try (FileInputStream fis = new FileInputStream("C:\\Users\\tushr\\IdeaProjects\\SeleniumIntegrationJenkins\\src\\main\\java\\resources\\config.properties")) {
-            cfg.load(fis);
+
+
+        try ( InputStream input = getClass().getClassLoader().getResourceAsStream("config.properties")){
+            cfg.load(input);
         }
         String browser = System.getProperty("browser", cfg.getProperty("browser"));
         DriverFactory.initDriver(browser);
