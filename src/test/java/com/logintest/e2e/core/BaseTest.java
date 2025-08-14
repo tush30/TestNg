@@ -1,10 +1,11 @@
 package com.logintest.e2e.core;
+
 import org.openqa.selenium.WebDriver;
 import org.testng.annotations.AfterMethod;
 import org.testng.annotations.BeforeMethod;
 
-import java.io.FileInputStream;
 import java.io.InputStream;
+import java.io.FileNotFoundException;
 import java.util.Properties;
 
 public class BaseTest {
@@ -13,12 +14,15 @@ public class BaseTest {
 
     @BeforeMethod
     public void setUp() throws Exception {
-        // load config
-
-
-        try ( InputStream input = getClass().getClassLoader().getResourceAsStream("config.properties")){
-            cfg.load(input);
+        // Load config from classpath instead of hardcoded path
+        try (InputStream fis = getClass().getClassLoader().getResourceAsStream("config.properties")) {
+            if (fis == null) {
+                throw new FileNotFoundException("config.properties not found in classpath");
+            }
+            cfg.load(fis);
         }
+
+        // Allow Jenkins or local to override browser via -Dbrowser
         String browser = System.getProperty("browser", cfg.getProperty("browser"));
         DriverFactory.initDriver(browser);
         driver = DriverFactory.getDriver();
@@ -30,7 +34,7 @@ public class BaseTest {
     }
 
     protected String baseUrl() {
+        // Allow Jenkins or local to override baseUrl via -DbaseUrl
         return System.getProperty("baseUrl", cfg.getProperty("baseUrl"));
     }
 }
-
