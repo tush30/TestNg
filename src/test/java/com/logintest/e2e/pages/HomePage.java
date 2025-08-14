@@ -14,6 +14,7 @@ public class HomePage {
     }
 
     public boolean isLoaded() {
+        System.out.println("hello tushar");
         return !driver.findElements(welcomeBanner).isEmpty();
     }
 }
