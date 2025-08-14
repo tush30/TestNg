@@ -14,7 +14,7 @@ public class HomePage {
     }
 
     public boolean isLoaded() {
-        System.out.println("hello tushar RathodHBTFDH kavya tetsing");
+        System.out.println("hello tushar RathodHBTFDH kavya teteyttsing");
         return !driver.findElements(welcomeBanner).isEmpty();
     }
 }
