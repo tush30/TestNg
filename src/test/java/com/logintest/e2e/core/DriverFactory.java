@@ -4,6 +4,7 @@ package com.logintest.e2e.core;
 import io.github.bonigarcia.wdm.WebDriverManager;
 import org.openqa.selenium.WebDriver;
 import org.openqa.selenium.chrome.ChromeDriver;
+import org.openqa.selenium.chrome.ChromeOptions;
 import org.openqa.selenium.firefox.FirefoxDriver;
 
 public class DriverFactory {
@@ -17,8 +18,11 @@ public class DriverFactory {
                 TL_DRIVER.set(new FirefoxDriver());
                 break;
             default:
-                WebDriverManager.chromedriver().setup();
-                TL_DRIVER.set(new ChromeDriver());
+                ChromeOptions options = new ChromeOptions();
+                if (System.getenv("JENKINS_HOME") != null) { // detect Jenkins
+                    options.addArguments("--headless", "--no-sandbox", "--disable-dev-shm-usage");
+                }
+                TL_DRIVER.set(new ChromeDriver(options));
         }
         getDriver().manage().window().maximize();
     }
